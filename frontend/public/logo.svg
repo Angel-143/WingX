@@ -1,0 +1,26 @@
+<svg width="512" height="512" viewBox="0 0 680 680" xmlns="http://www.w3.org/2000/svg">
+<circle cx="340" cy="340" r="300" fill="#ffffff"/>
+<circle cx="340" cy="340" r="298" fill="none" stroke="url(#ring)" stroke-width="4"/>
+<defs>
+  <linearGradient id="ring" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#ff6b35"/>
+    <stop offset="100%" stop-color="#ff3cac"/>
+  </linearGradient>
+  <linearGradient id="wGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+    <stop offset="0%" stop-color="#ff6b35"/>
+    <stop offset="100%" stop-color="#ff3cac"/>
+  </linearGradient>
+  <linearGradient id="flameGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+    <stop offset="0%" stop-color="#ff6b35"/>
+    <stop offset="60%" stop-color="#ff3cac"/>
+    <stop offset="100%" stop-color="#f7c948"/>
+  </linearGradient>
+</defs>
+<path d="M200 310 C160 240, 120 200, 90 180 C130 200, 170 230, 200 280 C180 250, 150 210, 110 195 C150 210, 185 245, 210 300 Z" fill="url(#wGrad)" opacity="0.85"/>
+<path d="M480 310 C520 240, 560 200, 590 180 C550 200, 510 230, 480 280 C500 250, 530 210, 570 195 C530 210, 495 245, 470 300 Z" fill="url(#wGrad)" opacity="0.85"/>
+<path d="M340 180 C355 205, 375 220, 370 250 C365 270, 355 278, 360 295 C365 310, 375 315, 370 335 C365 355, 345 370, 340 400 C335 370, 315 355, 310 335 C305 315, 315 310, 320 295 C325 278, 315 270, 310 250 C305 220, 325 205, 340 180Z" fill="url(#flameGrad)"/>
+<path d="M340 215 C348 232, 358 242, 355 260 C352 272, 346 280, 349 294 C352 306, 358 310, 355 326 C352 340, 344 350, 340 368 C336 350, 328 340, 325 326 C322 310, 328 306, 331 294 C334 280, 328 272, 325 260 C322 242, 332 232, 340 215Z" fill="#f7c948" opacity="0.6"/>
+<text x="340" y="480" text-anchor="middle" font-family="'Arial Black', 'Helvetica Neue', sans-serif" font-weight="900" font-size="72" letter-spacing="8" fill="url(#wGrad)">WINGX</text>
+<text x="340" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-weight="400" font-size="20" letter-spacing="6" fill="#888888">FOOD DELIVERY</text>
+<line x1="240" y1="535" x2="440" y2="535" stroke="url(#ring)" stroke-width="2" stroke-linecap="round"/>
+</svg>
