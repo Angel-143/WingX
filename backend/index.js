@@ -42,6 +42,13 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use(cookieParser())
+
+app.get("/", (req, res) => {
+  res.send("WingX Backend Running 🚀");
+});
+
+
+
 app.use('/api/auth', authRoute)
 app.use('/api/user', userRoute)
 app.use('/api/shop', shopRoute)
