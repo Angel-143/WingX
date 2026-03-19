@@ -5,8 +5,9 @@ import { FaTrash, FaExclamationTriangle } from "react-icons/fa";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import axios from "axios";
 import { setMyShopData } from "../redux/owner_slice.js";
+import { API_BASE_URL } from "../config/apiConfig.js";
 
-const serverUrl = "http://localhost:5000";
+const serverUrl = API_BASE_URL;
 
 function DeleteItem() {
   const navigate = useNavigate();

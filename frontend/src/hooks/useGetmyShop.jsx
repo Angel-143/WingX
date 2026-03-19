@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setMyShopData } from "../redux/owner_slice";
+import { API_BASE_URL } from "../config/apiConfig.js";
 
-const serverUrl = "http://localhost:5000";
+const serverUrl = API_BASE_URL;
 
 const useGetMyShop = () => {
 

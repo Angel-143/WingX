@@ -15,6 +15,16 @@ import EditItem from "./pages/edit_item.jsx";
 import DeleteItem from "./pages/delete_item.jsx";
 import useGetShopByCity from "./hooks/useGetShopByCity.jsx";
 import useGetItemByCity from "./hooks/useGetItemByCity.jsx";
+import CartPage from "./pages/CartPage.jsx";
+import CheckOutPage from "./pages/CheckOutPage.jsx";
+import MyOrders from "./pages/myOrder.jsx";
+import NutritionScanner from "./pages/Nutritionscanner.jsx";
+import ShopDetailPage from "./pages/ShopDetailPage.jsx";
+import MySubscriptions from "./pages/MySubscriptions.jsx";
+
+
+
+
 
 function App() {
   const { loading } = getCurrentUser();
@@ -64,6 +74,15 @@ function App() {
       <Route path="/add-item" element={userData ? <AddItem /> : <Navigate to="/signin" />} />
       <Route path="/edit-item/:id" element={userData ? <EditItem /> : <Navigate to="/signin" />} />
       <Route path="/delete-item/:id" element={userData ? <DeleteItem /> : <Navigate to="/signin" />} />
+      <Route path="/cart-page" element={userData ? <CartPage /> : <Navigate to="/signin" />} />
+      <Route path="/checkout-page" element={userData ? <CheckOutPage /> : <Navigate to="/signin" />} />
+      <Route path="/my-orders" element={userData ? <MyOrders /> : <Navigate to="/signin" />} />
+      <Route path="/scanner" element={userData ? <NutritionScanner /> : <Navigate to="/signin" />} />
+      <Route path="/shop/:shopId" element={userData ? <ShopDetailPage /> : <Navigate to="/signin" />} />
+      <Route path="/my-subscriptions" element={userData ? <MySubscriptions /> : <Navigate to="/signin" />} />
+      
+      
+      
     </Routes>
   );
 }

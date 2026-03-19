@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { ShopByCity } from "../redux/user_slice.js";
+import { API_BASE_URL } from "../config/apiConfig.js";
 
-const serverUrl = "http://localhost:5000";
+const serverUrl = API_BASE_URL;
 
 function useGetShopByCity() {
     const dispatch = useDispatch();

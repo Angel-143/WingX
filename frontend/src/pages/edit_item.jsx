@@ -5,8 +5,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { FaUtensils, FaCamera, FaLeaf, FaDrumstickBite } from "react-icons/fa";
 import axios from "axios";
 import { setMyShopData } from "../redux/owner_slice.js";
+import { API_BASE_URL } from "../config/apiConfig.js";
 
-const serverUrl = "http://localhost:5000";
+const serverUrl = API_BASE_URL;
 
 const categories = ["starter", "maincourse", "dessert", "beverage", "snack", "other"];
 

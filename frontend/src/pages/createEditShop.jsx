@@ -6,8 +6,9 @@ import { FaStore, FaCamera } from "react-icons/fa";
 import useGetCity from "../hooks/useGetCity.jsx";
 import axios from "axios";
 import { setMyShopData } from "../redux/owner_slice.js";
+import { API_BASE_URL } from "../config/apiConfig.js";
 
-const serverUrl = "http://localhost:5000";
+const serverUrl = API_BASE_URL;
 
 function CreateEditShop() {
   useGetCity();

@@ -2,154 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/user_slice.js";
-import { signInWithGoogle } from "../../firebase.js"; // ✅ Import from root
-
-
-const styles = {
-  page: {
-    minHeight: "100vh",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    background: "#0a0a0f",
-    fontFamily: "'Outfit', sans-serif",
-    color: "#f0ede8",
-    position: "relative",
-    overflow: "hidden",
-  },
-  bgGrid: {
-    position: "absolute", inset: 0,
-    backgroundImage:
-      "linear-gradient(rgba(42,42,61,0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(42,42,61,0.35) 1px, transparent 1px)",
-    backgroundSize: "48px 48px", zIndex: 0,
-  },
-  orb1: {
-    position: "absolute", width: 400, height: 400, borderRadius: "50%",
-    background: "rgba(255,77,0,0.15)", filter: "blur(90px)",
-    top: "-10%", left: "-5%", zIndex: 0,
-    animation: "floatOrb 7s ease-in-out infinite",
-  },
-  orb2: {
-    position: "absolute", width: 300, height: 300, borderRadius: "50%",
-    background: "rgba(255,140,0,0.1)", filter: "blur(80px)",
-    bottom: "-10%", right: "-5%", zIndex: 0,
-    animation: "floatOrb 7s ease-in-out infinite 3s",
-  },
-  orb3: {
-    position: "absolute", width: 200, height: 200, borderRadius: "50%",
-    background: "rgba(255,204,0,0.07)", filter: "blur(60px)",
-    top: "50%", right: "20%", zIndex: 0,
-    animation: "floatOrb 7s ease-in-out infinite 5s",
-  },
-  card: {
-    position: "relative", zIndex: 1,
-    width: "100%", maxWidth: 440,
-    background: "rgba(18,18,26,0.88)",
-    border: "1px solid #2a2a3d",
-    borderRadius: 20,
-    padding: "44px 40px",
-    backdropFilter: "blur(20px)",
-    boxShadow: "0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,77,0,0.06)",
-  },
-  logo: {
-    display: "flex", alignItems: "center", justifyContent: "center",
-    gap: 10, marginBottom: 28,
-  },
-  logoText: {
-    fontFamily: "'Bebas Neue', sans-serif",
-    fontSize: 36, letterSpacing: 3,
-    background: "linear-gradient(135deg, #ff4d00, #ff8c00, #ffcc00)",
-    WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-  },
-  logoBadge: {
-    background: "rgba(255,77,0,0.15)",
-    border: "1px solid rgba(255,77,0,0.3)",
-    borderRadius: 8, padding: "3px 8px",
-    fontSize: 10, fontWeight: 700,
-    color: "#ff8c00", letterSpacing: 1.5, textTransform: "uppercase",
-  },
-  formTitle: {
-    fontFamily: "'Bebas Neue', sans-serif",
-    fontSize: 34, letterSpacing: 1.5,
-    marginBottom: 5, textAlign: "center",
-    background: "linear-gradient(135deg, #fff 60%, #ff8c00)",
-    WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text",
-  },
-  formSub: { fontSize: 13, color: "#7a7a9a", marginBottom: 28, textAlign: "center" },
-  inputGroup: { marginBottom: 16 },
-  label: {
-    display: "block", fontSize: 11, fontWeight: 600,
-    letterSpacing: 1.5, textTransform: "uppercase",
-    color: "#7a7a9a", marginBottom: 7,
-  },
-  inputWrap: { position: "relative" },
-  input: {
-    width: "100%", background: "#1a1a27",
-    border: "1px solid #2a2a3d", borderRadius: 10,
-    padding: "12px 14px 12px 40px",
-    fontFamily: "'Outfit', sans-serif", fontSize: 14,
-    color: "#f0ede8", outline: "none",
-    transition: "border-color 0.2s, box-shadow 0.2s",
-    boxSizing: "border-box",
-  },
-  iconWrap: {
-    position: "absolute", left: 13, top: "50%",
-    transform: "translateY(-50%)", opacity: 0.5,
-    pointerEvents: "none", display: "flex", alignItems: "center",
-  },
-  eyeBtn: {
-    position: "absolute", right: 11, top: "50%",
-    transform: "translateY(-50%)",
-    background: "none", border: "none", cursor: "pointer",
-    color: "#7a7a9a", display: "flex", alignItems: "center", padding: 4,
-  },
-  forgotLink: {
-    display: "block", textAlign: "right",
-    fontSize: 12, color: "#ff8c00",
-    textDecoration: "none", marginTop: 7, cursor: "pointer",
-    fontWeight: 500,
-  },
-  btnFire: {
-    width: "100%", marginTop: 22, padding: "13px",
-    border: "none", borderRadius: 10,
-    background: "linear-gradient(135deg, #ff4d00 0%, #ff6a00 50%, #ff8c00 100%)",
-    color: "#fff", fontFamily: "'Outfit', sans-serif",
-    fontSize: 15, fontWeight: 700, letterSpacing: 1,
-    cursor: "pointer", boxShadow: "0 6px 28px rgba(255,77,0,0.4)",
-    transition: "transform 0.15s, box-shadow 0.15s",
-  },
-  divider: {
-    display: "flex", alignItems: "center", gap: 12,
-    margin: "18px 0", fontSize: 12, color: "#7a7a9a",
-  },
-  dividerLine: { flex: 1, height: 1, background: "#2a2a3d" },
-  btnGoogle: {
-    width: "100%", padding: "12px",
-    background: "#1a1a27", border: "1px solid #2a2a3d",
-    borderRadius: 10, color: "#f0ede8",
-    fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 500,
-    cursor: "pointer", display: "flex",
-    alignItems: "center", justifyContent: "center", gap: 10,
-    transition: "border-color 0.2s, background 0.2s",
-  },
-  switchLink: { textAlign: "center", marginTop: 20, fontSize: 13, color: "#7a7a9a" },
-  spinner: {
-    width: 16, height: 16,
-    border: "2px solid rgba(240,237,232,0.3)",
-    borderTop: "2px solid #f0ede8",
-    borderRadius: "50%",
-    animation: "spin 0.7s linear infinite",
-    flexShrink: 0,
-  },
-  toast: {
-    position: "fixed", bottom: 32, left: "50%",
-    transform: "translateX(-50%)",
-    padding: "12px 24px", borderRadius: 10,
-    fontSize: 14, fontWeight: 600, zIndex: 999,
-    boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
-    color: "#fff", pointerEvents: "none", whiteSpace: "nowrap",
-  },
-};
+import { signInWithGoogle } from "../../firebase.js";
 
 function GoogleIcon() {
   return (
@@ -168,22 +21,29 @@ export default function SignIn() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);  // ✅ Added
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [toast, setToast] = useState(null);
   const [focusedField, setFocusedField] = useState(null);
-  
+
   const showToast = (msg, ok = true) => {
     setToast({ msg, ok });
     setTimeout(() => setToast(null), 3000);
   };
 
   const getInputStyle = (name) => ({
-    ...styles.input,
-    borderColor: focusedField === name ? "#ff4d00" : "#2a2a3d",
-    boxShadow: focusedField === name ? "0 0 0 3px rgba(255,77,0,0.12)" : "none",
+    width: "100%",
+    background: focusedField === name ? "rgba(255,255,255,0.97)" : "rgba(255,255,255,0.92)",
+    border: `2px solid ${focusedField === name ? "#ff6b35" : "rgba(255,255,255,0.6)"}`,
+    borderRadius: 14,
+    padding: "12px 14px 12px 42px",
+    fontFamily: "'Plus Jakarta Sans', sans-serif",
+    fontSize: 14, fontWeight: 500,
+    color: "#1a1a2e", outline: "none",
+    transition: "border-color 0.2s, box-shadow 0.2s, background 0.2s",
+    boxSizing: "border-box",
+    boxShadow: focusedField === name ? "0 0 0 4px rgba(255,107,53,0.15)" : "0 2px 8px rgba(0,0,0,0.06)",
   });
 
-  // ── Email / Password Sign In ──
   const handleSubmit = async () => {
     const { email, password } = form;
     if (!email || !password) return showToast("Please fill all fields", false);
@@ -196,105 +56,241 @@ export default function SignIn() {
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-      
-      if (!res.ok) {
-        showToast(data.message || "Something went wrong", false);
-        setLoading(false);
-        return;
-      }
-      
-      console.log("🔥 Backend response:", data);
+      if (!res.ok) { showToast(data.message || "Something went wrong", false); setLoading(false); return; }
       dispatch(setUserData(data.user));
-      console.log("🔥 Dispatched user:", data.user);
-      
       showToast("✓ Welcome back!");
-      setTimeout(() => {
-        console.log("🔥 Navigating to /");
-        navigate("/");
-      }, 1200);
-    } catch (error) {
-      console.error("❌ Error:", error);
-      showToast("Network error", false);
-    } finally {
-      setLoading(false);
-    }
+      setTimeout(() => navigate("/"), 1200);
+    } catch { showToast("Network error", false); }
+    finally { setLoading(false); }
   };
 
-  // ✅ Google Sign In Handler
   const handleWithGoogle = async () => {
     setGoogleLoading(true);
     try {
-      // Step 1: Firebase Google popup
       const googleUser = await signInWithGoogle();
-      console.log("🔥 Google user:", googleUser);
-
-      // Step 2: Send to backend
       const res = await fetch("/api/auth/google", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({
-          name:  googleUser.displayName,
-          email: googleUser.email,
-        }),
+        body: JSON.stringify({ name: googleUser.displayName, email: googleUser.email }),
       });
       const data = await res.json();
-      
-      if (!res.ok) {
-        showToast(data.message || "Google sign-in failed", false);
-        setGoogleLoading(false);
-        return;
-      }
-      
+      if (!res.ok) { showToast(data.message || "Google sign-in failed", false); setGoogleLoading(false); return; }
       dispatch(setUserData(data.user));
       showToast("✓ Welcome back!");
       setTimeout(() => navigate("/"), 1200);
     } catch (err) {
-      console.error("❌ Google error:", err);
-      if (err.code === "auth/popup-closed-by-user") {
-        showToast("Popup closed — please try again", false);
-      } else {
-        showToast("Google sign-in failed", false);
-      }
-    } finally {
-      setGoogleLoading(false);
-    }
+      if (err.code === "auth/popup-closed-by-user") showToast("Popup closed — try again", false);
+      else showToast("Google sign-in failed", false);
+    } finally { setGoogleLoading(false); }
   };
 
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap');
-        @keyframes floatOrb { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-24px) scale(1.06)} }
-        @keyframes bounce   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
-        @keyframes spin     { to { transform: rotate(360deg); } }
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+        @keyframes floatOrb  { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-28px) scale(1.07)} }
+        @keyframes bounce    { 0%,100%{transform:translateY(0) rotate(-5deg)} 50%{transform:translateY(-6px) rotate(5deg)} }
+        @keyframes spin      { to { transform: rotate(360deg); } }
+        @keyframes fadeUp    { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes shimmer   { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
         * { box-sizing: border-box; }
-        input::placeholder { color: #3a3a55; }
+
+        .wx-signin-page {
+          min-height: 100vh;
+          display: flex; align-items: center; justify-content: center;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          position: relative; overflow: hidden; padding: 24px 16px;
+          background: linear-gradient(145deg, #fff5f0 0%, #fdf8ff 40%, #f0fdf9 100%);
+        }
+
+        /* ── BG BLOBS ── */
+        .wx-blob { position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; }
+        .wx-blob-1 { width: 500px; height: 500px; background: rgba(255,107,53,0.18); top: -15%; left: -10%; animation: floatOrb 8s ease-in-out infinite; }
+        .wx-blob-2 { width: 380px; height: 380px; background: rgba(255,60,172,0.13); bottom: -10%; right: -8%; animation: floatOrb 8s ease-in-out infinite 3s; }
+        .wx-blob-3 { width: 240px; height: 240px; background: rgba(168,85,247,0.1); top: 35%; right: 10%; animation: floatOrb 8s ease-in-out infinite 5s; }
+        .wx-blob-4 { width: 180px; height: 180px; background: rgba(20,184,166,0.1); bottom: 20%; left: 5%; animation: floatOrb 8s ease-in-out infinite 2s; }
+
+        /* ── DOTS PATTERN ── */
+        .wx-dots {
+          position: absolute; inset: 0; z-index: 0; pointer-events: none;
+          backgroundImage: radial-gradient(rgba(255,107,53,0.12) 1px, transparent 1px);
+          background-size: 32px 32px;
+        }
+
+        /* ── CARD ── */
+        .wx-signin-card {
+          position: relative; z-index: 1;
+          width: 100%; max-width: 460px;
+          background: rgba(255,255,255,0.75);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border: 2px solid rgba(255,255,255,0.9);
+          border-radius: 28px;
+          padding: 40px 40px;
+          box-shadow: 0 24px 64px rgba(255,107,53,0.12), 0 8px 32px rgba(0,0,0,0.08);
+          animation: fadeUp 0.5s ease;
+        }
+
+        /* ── LOGO ── */
+        .wx-si-logo {
+          display: flex; align-items: center; justify-content: center; gap: 10px;
+          margin-bottom: 24px;
+        }
+        .wx-si-logo-icon {
+          width: 44px; height: 44px; border-radius: 14px;
+          background: linear-gradient(135deg, #ff6b35, #ff3cac);
+          display: flex; align-items: center; justify-content: center;
+          font-size: 20px;
+          box-shadow: 0 6px 18px rgba(255,107,53,0.4);
+          animation: bounce 2s ease-in-out infinite;
+        }
+        .wx-si-logo-text {
+          font-family: 'Nunito', sans-serif; font-size: 28px; font-weight: 900;
+          background: linear-gradient(135deg, #ff6b35, #ff3cac, #a855f7);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+          letter-spacing: -0.5px;
+        }
+        .wx-si-logo-badge {
+          background: linear-gradient(135deg, rgba(255,107,53,0.12), rgba(255,60,172,0.12));
+          border: 1.5px solid rgba(255,107,53,0.25);
+          border-radius: 8px; padding: 3px 8px;
+          font-size: 10px; font-weight: 800; color: #ff6b35;
+          letter-spacing: 1.5px; text-transform: uppercase;
+        }
+
+        /* ── TITLES ── */
+        .wx-si-title {
+          font-family: 'Nunito', sans-serif; font-size: 28px; font-weight: 900;
+          text-align: center; margin-bottom: 6px;
+          background: linear-gradient(135deg, #1a1a2e, #ff6b35);
+          -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .wx-si-sub { font-size: 13px; color: #9ca3af; text-align: center; margin-bottom: 28px; font-weight: 500; }
+
+        /* ── LABEL ── */
+        .wx-si-label {
+          display: block; font-size: 11px; font-weight: 700;
+          letter-spacing: 1.5px; text-transform: uppercase;
+          color: #6b7280; margin-bottom: 6px;
+        }
+
+        /* ── ICON WRAP ── */
+        .wx-si-icon {
+          position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+          opacity: 0.6; pointer-events: none; display: flex; align-items: center;
+        }
+
+        /* ── EYE BTN ── */
+        .wx-eye-btn {
+          position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+          background: none; border: none; cursor: pointer;
+          color: #9ca3af; display: flex; align-items: center; padding: 4px;
+          transition: color 0.2s;
+        }
+        .wx-eye-btn:hover { color: #ff6b35; }
+
+        /* ── FORGOT ── */
+        .wx-forgot {
+          display: block; text-align: right; font-size: 12px;
+          color: #ff6b35; font-weight: 700; text-decoration: none;
+          margin-top: 8px; transition: opacity 0.2s;
+        }
+        .wx-forgot:hover { opacity: 0.75; }
+
+        /* ── SUBMIT BTN ── */
+        .wx-si-btn {
+          width: 100%; margin-top: 20px; padding: 14px;
+          border: none; border-radius: 14px;
+          background: linear-gradient(135deg, #ff6b35, #ff3cac);
+          color: white; font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 15px; font-weight: 800; letter-spacing: 0.5px;
+          cursor: pointer;
+          box-shadow: 0 8px 24px rgba(255,107,53,0.4);
+          transition: transform 0.15s, box-shadow 0.2s, opacity 0.2s;
+        }
+        .wx-si-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(255,107,53,0.5); }
+        .wx-si-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+
+        /* ── DIVIDER ── */
+        .wx-divider {
+          display: flex; align-items: center; gap: 12px;
+          margin: 18px 0; font-size: 12px; font-weight: 600; color: #9ca3af;
+        }
+        .wx-divider-line { flex: 1; height: 1.5px; background: rgba(255,107,53,0.12); border-radius: 1px; }
+
+        /* ── GOOGLE BTN ── */
+        .wx-google-btn {
+          width: 100%; padding: 13px;
+          background: white;
+          border: 2px solid rgba(255,107,53,0.15);
+          border-radius: 14px; color: #1a1a2e;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          font-size: 14px; font-weight: 700;
+          cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+          transition: border-color 0.2s, background 0.2s, transform 0.15s, box-shadow 0.2s;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        .wx-google-btn:hover:not(:disabled) {
+          border-color: rgba(255,107,53,0.4);
+          background: rgba(255,107,53,0.04);
+          transform: translateY(-1px);
+          box-shadow: 0 6px 20px rgba(255,107,53,0.15);
+        }
+        .wx-google-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+
+        /* ── SWITCH LINK ── */
+        .wx-switch { text-align: center; margin-top: 20px; font-size: 13px; color: #9ca3af; font-weight: 500; }
+        .wx-switch a { color: #ff6b35; font-weight: 800; text-decoration: none; }
+        .wx-switch a:hover { text-decoration: underline; }
+
+        /* ── SPINNER ── */
+        .wx-spinner {
+          width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
+          border: 2px solid rgba(255,255,255,0.35);
+          border-top: 2px solid white;
+          animation: spin 0.7s linear infinite;
+        }
+
+        /* ── TOAST ── */
+        .wx-toast {
+          position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+          padding: 12px 24px; border-radius: 14px;
+          font-size: 14px; font-weight: 700; z-index: 999;
+          box-shadow: 0 8px 28px rgba(0,0,0,0.2);
+          color: white; pointer-events: none; white-space: nowrap;
+          font-family: 'Plus Jakarta Sans', sans-serif;
+          animation: fadeUp 0.3s ease;
+        }
       `}</style>
 
-      <div style={styles.page}>
-        <div style={styles.bgGrid} />
-        <div style={styles.orb1} />
-        <div style={styles.orb2} />
-        <div style={styles.orb3} />
+      <div className="wx-signin-page">
+        <div className="wx-blob wx-blob-1" />
+        <div className="wx-blob wx-blob-2" />
+        <div className="wx-blob wx-blob-3" />
+        <div className="wx-blob wx-blob-4" />
+        <div className="wx-dots" style={{ backgroundImage: "radial-gradient(rgba(255,107,53,0.12) 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
 
-        <div style={styles.card}>
+        <div className="wx-signin-card">
+
           {/* Logo */}
-          <div style={styles.logo}>
-            <span style={{ fontSize: 26, display: "inline-block", animation: "bounce 1.8s ease-in-out infinite" }}>🔥</span>
-            <span style={styles.logoText}>WingX</span>
-            <span style={styles.logoBadge}>Food</span>
+          <div className="wx-si-logo">
+            <div className="wx-si-logo-icon">🔥</div>
+            <span className="wx-si-logo-text">WingX</span>
+            <span className="wx-si-logo-badge">Food</span>
           </div>
 
-          <div style={styles.formTitle}>Welcome Back</div>
-          <div style={styles.formSub}>Ready to order? Sign in to continue.</div>
+          <div className="wx-si-title">Welcome Back 👋</div>
+          <div className="wx-si-sub">Ready to order? Sign in to continue.</div>
 
           {/* Email */}
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Email Address</label>
-            <div style={styles.inputWrap}>
-              <span style={styles.iconWrap}>
-                <svg width="15" height="15" fill="none" stroke="#ff8c00" strokeWidth="2" viewBox="0 0 24 24">
+          <div style={{ marginBottom: 14 }}>
+            <label className="wx-si-label">Email Address</label>
+            <div style={{ position: "relative" }}>
+              <span className="wx-si-icon">
+                <svg width="15" height="15" fill="none" stroke="#ff6b35" strokeWidth="2" viewBox="0 0 24 24">
                   <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/>
                 </svg>
               </span>
@@ -312,16 +308,16 @@ export default function SignIn() {
           </div>
 
           {/* Password */}
-          <div style={styles.inputGroup}>
-            <label style={styles.label}>Password</label>
-            <div style={styles.inputWrap}>
-              <span style={styles.iconWrap}>
-                <svg width="15" height="15" fill="none" stroke="#ff8c00" strokeWidth="2" viewBox="0 0 24 24">
+          <div style={{ marginBottom: 4 }}>
+            <label className="wx-si-label">Password</label>
+            <div style={{ position: "relative" }}>
+              <span className="wx-si-icon">
+                <svg width="15" height="15" fill="none" stroke="#ff6b35" strokeWidth="2" viewBox="0 0 24 24">
                   <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                 </svg>
               </span>
               <input
-                style={{ ...getInputStyle("password"), paddingRight: 42 }}
+                style={{ ...getInputStyle("password"), paddingRight: 44 }}
                 type={showPass ? "text" : "password"} placeholder="••••••••"
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
@@ -330,54 +326,41 @@ export default function SignIn() {
                 onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                 autoComplete="current-password"
               />
-              <button style={styles.eyeBtn} onClick={() => setShowPass(!showPass)}>
-                {showPass ? (
-                  <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M1 1l22 22"/>
-                  </svg>
-                ) : (
-                  <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-                  </svg>
-                )}
+              <button className="wx-eye-btn" onClick={() => setShowPass(!showPass)}>
+                {showPass
+                  ? <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19M1 1l22 22"/></svg>
+                  : <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                }
               </button>
             </div>
-            <Link to="/forgot-password" style={styles.forgotLink}>Forgot password?</Link>
+            <Link to="/forgot-password" className="wx-forgot">Forgot password?</Link>
           </div>
 
-          <button
-            style={{ ...styles.btnFire, opacity: loading ? 0.7 : 1, cursor: loading ? "not-allowed" : "pointer" }}
-            onClick={handleSubmit} disabled={loading}
-          >
-            {loading ? "Signing In…" : "Sign In →"}
+          <button className="wx-si-btn" onClick={handleSubmit} disabled={loading}>
+            {loading ? <span style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}><span className="wx-spinner" /> Signing In…</span> : "Sign In →"}
           </button>
 
-          <div style={styles.divider}>
-            <div style={styles.dividerLine} /> or continue with <div style={styles.dividerLine} />
+          <div className="wx-divider">
+            <div className="wx-divider-line" /> or continue with <div className="wx-divider-line" />
           </div>
 
-          {/* ✅ Google Button with handler */}
-          <button
-            style={{ ...styles.btnGoogle, opacity: googleLoading ? 0.7 : 1, cursor: googleLoading ? "not-allowed" : "pointer" }}
-            onClick={handleWithGoogle}
-            disabled={googleLoading}
-            onMouseEnter={(e) => { if (!googleLoading) { e.currentTarget.style.borderColor = "#ff4d00"; e.currentTarget.style.background = "rgba(255,77,0,0.05)"; }}}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#2a2a3d"; e.currentTarget.style.background = "#1a1a27"; }}
-          >
+          <button className="wx-google-btn" onClick={handleWithGoogle} disabled={googleLoading}>
             {googleLoading
-              ? <><span style={styles.spinner} /> Signing in with Google…</>
+              ? <><span style={{ width: 16, height: 16, borderRadius: "50%", border: "2px solid #e5e7eb", borderTop: "2px solid #ff6b35", animation: "spin 0.7s linear infinite", flexShrink: 0 }} /> Signing in…</>
               : <><GoogleIcon /> Continue with Google</>
             }
           </button>
 
-          <div style={styles.switchLink}>
+          <div className="wx-switch">
             Don't have an account?{" "}
-            <Link to="/signup" style={{ color: "#ff8c00", fontWeight: 600, textDecoration: "none" }}>Sign Up</Link>
+            <Link to="/signup">Sign Up</Link>
           </div>
         </div>
 
         {toast && (
-          <div style={{ ...styles.toast, background: toast.ok ? "#22c55e" : "#ff3b5c" }}>{toast.msg}</div>
+          <div className="wx-toast" style={{ background: toast.ok ? "linear-gradient(135deg,#22c55e,#16a34a)" : "linear-gradient(135deg,#ef4444,#dc2626)" }}>
+            {toast.msg}
+          </div>
         )}
       </div>
     </>

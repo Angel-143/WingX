@@ -5,9 +5,10 @@ import { useDispatch } from "react-redux";
 import { currentCity, setUserData } from "../redux/user_slice.js";
 import { useSelector } from "react-redux";
 import { setMyShopData } from "../redux/owner_slice.js";
+import { API_BASE_URL } from "../config/apiConfig.js";
 
 
-const serverUrl = "http://localhost:5000";
+const serverUrl = API_BASE_URL;
 
 function useGetShop() {
     const dispatch = useDispatch()

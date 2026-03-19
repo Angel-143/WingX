@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/user_slice.js";
+import { API_BASE_URL } from "../config/apiConfig.js";
 
 function useCurrentUser() {
     const dispatch = useDispatch();
@@ -11,7 +12,7 @@ function useCurrentUser() {
         const fetchCurrentUser = async () => {
             try {
                 const result = await axios.get(
-                    "http://localhost:5000/api/user/current",
+                    `${API_BASE_URL}/api/user/current`,
                     { withCredentials: true }
                 );
                 dispatch(setUserData(result.data));
