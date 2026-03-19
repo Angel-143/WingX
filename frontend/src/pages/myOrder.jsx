@@ -5,7 +5,7 @@ import axios from "axios";
 import Navbar from "../dashboards/navbar.jsx";
 import { FaArrowLeft } from "react-icons/fa";
 import UserOrderCart from "./UserOrderCart.jsx";
-import OwnerOrderCart from "./OwnerOrderCart.jsx";
+import OwnerOrderCart from "./ownerOrderCart.jsx";
 import { API_BASE_URL } from "../config/apiConfig.js";
 
 const serverUrl = API_BASE_URL;
